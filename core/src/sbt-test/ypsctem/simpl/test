@@ -1,0 +1,2 @@
+# first test
+> sctem prj=root scp=main vsn=scala pkg=me.kerfume tmp=DomainModel val="""{"a": "b"}"""
