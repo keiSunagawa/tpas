@@ -15,6 +15,7 @@ object Dependencies {
   lazy val circe = Seq(
     "io.circe" %% "circe-core" % Versions.circe,
     "io.circe" %% "circe-generic" % Versions.circe,
-    "io.circe" %% "circe-parser" % Versions.circe
+    "io.circe" %% "circe-parser" % Versions.circe,
+    "io.circe" %% "circe-literal" % Versions.circe
   )
 }

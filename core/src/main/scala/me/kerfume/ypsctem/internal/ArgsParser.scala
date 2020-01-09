@@ -7,7 +7,7 @@ import io.circe._
 import JsonUtil._
 
 object ArgsParser {
-  def parse(args: List[String]): Either[ParsError, Args] = {
+  def parse(args: List[String], settings: Settings): Either[ParsError, Args] = {
     for {
       parsedArgs <- args
         .traverse { a =>
@@ -15,9 +15,9 @@ object ArgsParser {
           Either.cond(kv.size == 2, kv(0) -> kv(1), InvalidArgFormat(a))
         }
         .map(_.toMap)
-      projectName = parsedArgs.getOrElse("prj", "root")
-      scope = parsedArgs.getOrElse("scp", "main")
-      codeType = parsedArgs.getOrElse("ctp", "scala")
+      projectName = parsedArgs.getOrElse("prj", settings.defaultProjectName)
+      scope = parsedArgs.getOrElse("scp", settings.defaultScopeName)
+      codeType = parsedArgs.getOrElse("ctp", settings.defaultCodeType)
       dest <- parsedArgs.get("dst").toRight(DestRequire())
       templateName <- parsedArgs.get("tmp").toRight(TemplateRequire())
       valuesJson <- parsedArgs.get("val") match {

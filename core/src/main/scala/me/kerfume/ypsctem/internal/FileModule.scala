@@ -7,10 +7,8 @@ import sbt.{IO => sIO}
 import cats.effect.IO
 
 object FileModule {
-  private val templateDirBase = "templates"
-
-  def getTemplate(templateName: String): IO[String] = {
-    val templatePath = Paths.get(s"./${templateDirBase}/${templateName}")
+  def getTemplate(templateName: String, settings: Settings): IO[String] = {
+    val templatePath = Paths.get(s"./${settings.templateDir}/${templateName}")
 
     for {
       isExists <- IO { Files.exists(templatePath) }
