@@ -1,4 +1,4 @@
-package me.kerfume.ypsctem.internal
+package me.kerfume.tpas.internal
 
 import cats.syntax.traverse._
 import cats.instances.list._

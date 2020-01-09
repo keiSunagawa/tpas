@@ -3,8 +3,8 @@ import Keys._
 import sbt.plugins.SbtPlugin
 import Dependencies._
 
-object Core {
-  lazy val ypsctem = (project in file("core"))
+object Tpas {
+  lazy val tpas = (project in file("tpas"))
     .enablePlugins(SbtPlugin)
     .settings(
       name := "ypsctem",

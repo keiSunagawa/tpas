@@ -1,4 +1,4 @@
-package me.kerfume.ypsctem.internal
+package me.kerfume.tpas.internal
 
 import io.circe._
 import collection.JavaConverters._

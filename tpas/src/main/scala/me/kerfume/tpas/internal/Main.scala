@@ -1,7 +1,7 @@
-package me.kerfume.ypsctem.internal
+package me.kerfume.tpas.internal
 
 import cats.effect.IO
-import me.kerfume.ypsctem.internal.ArgsParser.Args
+import me.kerfume.tpas.internal.ArgsParser.Args
 
 object Main {
   def run(args: Seq[String], state: sbt.State, settings: Settings): IO[Unit] =

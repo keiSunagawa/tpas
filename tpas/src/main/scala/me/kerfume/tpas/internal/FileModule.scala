@@ -1,4 +1,4 @@
-package me.kerfume.ypsctem.internal
+package me.kerfume.tpas.internal
 
 import java.io.File
 import java.nio.file.{Files, Path, Paths}

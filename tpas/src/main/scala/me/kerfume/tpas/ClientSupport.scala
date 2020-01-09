@@ -1,16 +1,16 @@
-package me.kerfume.ypsctem
+package me.kerfume.tpas
 
 import sbt._
 
 object ClientSupport {
-  import YPSCtem.autoImport._
+  import Tpas.autoImport._
 
-  def runSctem(
+  def runTpas(
       dest: String,
       template: String,
       valuesJson: String
   ): Def.Initialize[Task[Unit]] = {
     val escapedJson = valuesJson.replace("\"", "\\\"")
-    sctem.toTask(s""" dst=${dest} tmp=${template} "val=${escapedJson}"""")
+    tpas.toTask(s""" dst=${dest} tmp=${template} "val=${escapedJson}"""")
   }
 }
