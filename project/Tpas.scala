@@ -7,7 +7,7 @@ object Tpas {
   lazy val tpas = (project in file("tpas"))
     .enablePlugins(SbtPlugin)
     .settings(
-      name := "ypsctem",
+      name := "tpas",
       sbtPlugin     := true,
       scalacOptions ++= Base.commonScalaOptions,
       publishTo := Some(Resolver.file("tpas", file("repo"))),
