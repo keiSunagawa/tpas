@@ -1,7 +1,11 @@
 package me.kerfume.ypsctem
 
+import java.io.{StringReader, StringWriter}
+
 import sbt._
 import Keys._
+import _root_.io.circe._
+import com.github.mustachejava.{DefaultMustacheFactory}
 
 object KPlugin extends AutoPlugin {
   import complete.DefaultParsers._
@@ -30,8 +34,26 @@ object KPlugin extends AutoPlugin {
           val codeType = parsedArgs.getOrElse("ctp", "scala")
           val dest = parsedArgs.getOrElse("dst", "com.example.Hello")
           val template = parsedArgs.getOrElse("tmp", "noop")
-          val valuesJson = parsedArgs.getOrElse("val", "{}")
+          val valuesJson = parsedArgs
+            .getOrElse("val", """{"name": "Hello", "fooStr": "hello!" }""")
           println(valuesJson)
+
+          import collection.JavaConverters._
+          val folder = new _root_.io.circe.Json.Folder[Any] {
+            def onNull: Any = null
+            def onBoolean(value: Boolean): Any = value
+            def onNumber(value: JsonNumber): Any = value.toLong.get
+            def onString(value: String): Any = value
+            def onArray(value: Vector[Json]): Any = value.map(_.foldWith(this))
+            def onObject(value: JsonObject): Any =
+              value.toIterable
+                .map { case (k, v) => k -> v.foldWith(this) }
+                .toMap
+                .asJava
+          }
+          val values =
+            parser.parse(valuesJson).toOption.get.foldWith(folder)
+          println(values)
 
           val pkg = dest.split("\\.").init
           val fileNameBase = dest.split("\\.").last
@@ -49,9 +71,27 @@ object KPlugin extends AutoPlugin {
             .get // TODO unsafe
 
           // template に valuesJson を apply TODO
+          //val out = new OutputStreamWriter()
+          val mf = new DefaultMustacheFactory()
+          val m = mf.compile(
+            new StringReader(
+              s"""class {{ name }} {
+                |  def foo: String = "{{ fooStr }}"
+                |}
+               |""".stripMargin
+            ),
+            "scalaFile"
+          )
+
+          val sw = new StringWriter()
+          m.execute(sw, values)
+
+          val out = sw.toString
+
           val content =
             s"""package ${pkg.mkString(".")}
-             |class ${fileNameBase} {}
+             |
+             |${out}
              |""".stripMargin
 
           // package ディレクトリ作成(main/scalaのみ)
@@ -66,21 +106,4 @@ object KPlugin extends AutoPlugin {
         }
 
       }
-//    commands += Command.args("sctemWith", "") {
-//      case (s, args) =>
-//        val ns = Project
-//          .extract(s)
-//          .appendWithSession(
-//            Def.settings(
-//              (sctmProject in ThisBuild) := args(0),
-//              (sctmPackage in ThisBuild) := args(1)
-//            ),
-//            s
-//          )
-//        Project.extract(ns).runTask(sctem in ThisBuild, ns)
-//        s
-//    }
-    )
-
-  //override def projectSettings: Seq[Def.Setting[_]] =
 }

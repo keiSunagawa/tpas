@@ -3,7 +3,7 @@ import Keys._
 import Dependencies._
 
 object Base {
-  val commonLibs = cats ++ testDep
+  val commonLibs = cats ++ testDep ++ mustache ++ circe
 
   val commonScalaOptions =
     Seq(
