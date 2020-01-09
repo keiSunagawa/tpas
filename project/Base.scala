@@ -3,7 +3,7 @@ import Keys._
 import Dependencies._
 
 object Base {
-  val commonLibs = cats ++ testDep ++ mustache ++ circe
+  val commonLibs = cats ++ testDep
 
   val commonScalaOptions =
     Seq(
@@ -20,7 +20,8 @@ object Base {
       "-Ywarn-unused:-implicits",
       "-language:higherKinds",
       "-Ypatmat-exhaust-depth",
-      "off"
+      "off",
+      "-Ypartial-unification"
     )
 
   lazy val strictScalacOptions = Seq(

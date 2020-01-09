@@ -1,6 +1,7 @@
 import sbt._
 import Keys._
 import sbt.plugins.SbtPlugin
+import Dependencies._
 
 object Core {
   lazy val ypsctem = (project in file("core"))
@@ -9,6 +10,6 @@ object Core {
       name := "ypsctem",
       sbtPlugin     := true,
       scalacOptions ++= Base.commonScalaOptions,
-      libraryDependencies ++= Base.commonLibs
+      libraryDependencies ++= Base.commonLibs ++ mustache ++ circe ++ catsEffect
     )
 }
