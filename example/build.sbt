@@ -20,15 +20,12 @@ lazy val applyTemplate = inputKey[Unit]("call on interactive console > applyTemp
 
 applyTemplate := Def.inputTaskDyn {
   val args: Seq[String] = spaceDelimited("<arg>").parsed
-  Def.sequential{
 
-    val z=  s"""{
-               |  "bar": "${args.head}"
-               |}""".stripMargin
     runTpas(
       dest = "com.example.FooImpl",
       template = "Foo.tpl.scala",
-      valuesJson = z
+      valuesJson =  s"""{
+                       |  "bar": "${args.head}"
+                       |}""".stripMargin
     )
-  }
 }.evaluated
