@@ -10,6 +10,7 @@ object Tpas {
       name := "ypsctem",
       sbtPlugin     := true,
       scalacOptions ++= Base.commonScalaOptions,
+      publishTo := Some(Resolver.file("tpas", file("repo"))),
       libraryDependencies ++= Base.commonLibs ++ mustache ++ circe ++ catsEffect
     )
 }
