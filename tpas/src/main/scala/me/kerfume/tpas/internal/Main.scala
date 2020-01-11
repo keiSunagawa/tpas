@@ -14,7 +14,7 @@ object Main {
         parsedArgs <- IO.fromEither { ArgsParser.parse(args, settings) }
         baseDir <- SbtModule.getProjectDir(parsedArgs.projectName, state)
         template <- FileModule.getTemplate(parsedArgs.templateName, settings)
-        mergedJson = additionalEnvValues(parsedArgs)
+        mergedJson = additionalCtxValues(parsedArgs)
         applied <- MustacheModule.applyTemplate(template, mergedJson)
         dest = parsedArgs.dest
         content = contentComplete(applied, dest)
@@ -36,14 +36,14 @@ object Main {
   }
 
   import io.circe.Json
-  private def additionalEnvValues(args: Args): Json = {
-    val envJson = Json.obj(
-      "env" -> Json.obj(
+  private def additionalCtxValues(args: Args): Json = {
+    val ctxJson = Json.obj(
+      "ctx" -> Json.obj(
         "name" -> Json.fromString(args.dest.itemName),
         "project" -> Json.fromString(args.projectName)
       )
     )
 
-    args.valuesJson.deepMerge(envJson)
+    args.valuesJson.deepMerge(ctxJson)
   }
 }

@@ -1,3 +1,3 @@
-class {{ env.name }} {
+class {{ ctx.name }} {
   def foo: String = "{{ bar }}"
 }
