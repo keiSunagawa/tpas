@@ -20,7 +20,7 @@ object Main {
         content = contentComplete(applied, dest)
         _ <- FileModule.createFile(
           baseDir = baseDir.toPath,
-          scope = parsedArgs.scopeName,
+          scope = parsedArgs.scope,
           codeType = parsedArgs.codeType,
           dest = dest,
           content = content

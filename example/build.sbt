@@ -25,4 +25,4 @@ defTpasTask("tpasTest").setParser { arg =>
     template = "Foo.tpl.scala",
     valuesJson = json
   )
-}.setScope("test").build
+}.build

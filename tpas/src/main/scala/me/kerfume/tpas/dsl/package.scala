@@ -1,5 +1,7 @@
 package me.kerfume.tpas
 
+import me.kerfume.tpas.internal.enum._
+
 package object dsl {
   def minimum(
       dest: String,
@@ -19,8 +21,8 @@ package object dsl {
       template: String,
       valuesJson: String,
       project: String,
-      scope: String,
-      codeType: String
+      scope: Scope,
+      codeType: CodeType
   ): Params = Params(
     dest = dest,
     template = template,
@@ -29,6 +31,15 @@ package object dsl {
     scope = Some(scope),
     codeType = Some(codeType)
   )
+
+  val mainScope = Scope.Main
+  val testScope = Scope.Test
+
+  val scalaCode = CodeType.Scala
+  def scalaCode(version: String) = CodeType.ScalaWithVersion(version)
+  val scalaCode_213 = scalaCode("2.13")
+  val scalaCode_212 = scalaCode("2.12")
+  val javaCode = CodeType.Java
 
   implicit class BuilderWithParam(t: DefTask[DefTask.WithConst]) {
     def build: sbt.Def.Setting[sbt.Task[Unit]] = t.buildForTask

@@ -3,6 +3,7 @@ package me.kerfume.tpas.dsl
 import DefTask._
 import me.kerfume.tpas.Parser
 import sbt.internal.util.complete.{Parser => SParser}
+import me.kerfume.tpas.internal.enum._
 
 case class DefTask[S <: State](
     private val taskName: String,
@@ -44,19 +45,19 @@ case class DefTask[S <: State](
   }
 
   def setScope(
-      scopeName: String
+      scope: Scope
   ): DefTask[S] = {
     copy[S](
       updateParams = updateParams.compose(
         _.copy(
-          scope = Some(scopeName)
+          scope = Some(scope)
         )
       )
     )
   }
 
   def setCodeType(
-      codeType: String
+      codeType: CodeType
   ): DefTask[S] = {
     copy[S](
       updateParams = updateParams.compose(
@@ -117,6 +118,6 @@ case class Params(
     template: String,
     valuesJson: String,
     project: Option[String],
-    scope: Option[String],
-    codeType: Option[String]
+    scope: Option[Scope],
+    codeType: Option[CodeType]
 )

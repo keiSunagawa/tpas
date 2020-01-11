@@ -19,10 +19,10 @@ object Builder {
         s"prj=${inDQuotes(s)}"
       },
       params.scope.fold("") { s =>
-        s"scp=${inDQuotes(s)}"
+        s"scp=${inDQuotes(s.value)}"
       },
       params.codeType.fold("") { s =>
-        s"ctp=${inDQuotes(s)}"
+        s"ctp=${inDQuotes(s.value)}"
       }
     )
 

@@ -2,6 +2,7 @@ package me.kerfume.tpas.internal
 
 import io.circe._
 import JsonUtil._
+import enum._
 
 object ArgsParser {
   def parse(
@@ -17,12 +18,28 @@ object ArgsParser {
           parser.parse(jsonStr).left.map { ValuesJsonParseError }
       }
       projectName = args.getOrElse("prj", settings.defaultProjectName)
-      scope = args.getOrElse("scp", settings.defaultScopeName)
-      codeType = args.getOrElse("ctp", settings.defaultCodeType)
+      scope <- args.get("scp") match {
+        case Some(scp) =>
+          if (scp == Scope.Main.value) Right(Scope.Main)
+          else if (scp == Scope.Test.value) Right(Scope.Test)
+          else Left(InvalidScopeValue(scp))
+        case None =>
+          Right(settings.defaultScope)
+      }
+      codeType <- args.get("ctp") match {
+        case Some(ctp) =>
+          if (ctp == CodeType.Scala.value) Right(CodeType.Scala)
+          else if (ctp.startsWith(CodeType.ScalaWithVersion.prefix) && (ctp.size > CodeType.Scala.value.size)) {
+            val version = ctp.drop(CodeType.ScalaWithVersion.prefix.size)
+            Right(CodeType.ScalaWithVersion(version))
+          } else if (ctp == CodeType.Java.value) Right(CodeType.Java)
+          else Left(InvalidCodeTypeValue(ctp))
+        case None => Right(settings.defaultCodeType)
+      }
     } yield {
       Args(
         projectName = projectName,
-        scopeName = scope,
+        scope = scope,
         codeType = codeType,
         _dest = dest,
         templateName = templateName,
@@ -33,8 +50,8 @@ object ArgsParser {
 
   case class Args(
       projectName: String,
-      scopeName: String,
-      codeType: String,
+      scope: Scope,
+      codeType: CodeType,
       _dest: String,
       templateName: String,
       valuesJson: Json
@@ -44,18 +61,32 @@ object ArgsParser {
 
   sealed abstract class ParsError(errorMsg: String, cause: Throwable = null)
       extends RuntimeException(errorMsg, cause)
+
   case class InvalidArgFormat(invalid: String)
       extends ParsError(
         s"invalid arg format. valid format is key=value. invalid value: ${invalid}"
       )
+
   case class DestRequire()
       extends ParsError(
         s"dest param is required! e.g. dst=com.example.Hello"
       )
+
   case class TemplateRequire()
       extends ParsError(
         s"template param is required! e.g. tmp=HelloWorld.tpl.scala"
       )
+
   case class ValuesJsonParseError(cause: ParsingFailure)
       extends ParsError(s"invalid val param. json decode error.", cause)
+
+  case class InvalidScopeValue(invalid: String)
+      extends ParsError(
+        s"invalid scope. invalid value: ${invalid}"
+      )
+
+  case class InvalidCodeTypeValue(invalid: String)
+      extends ParsError(
+        s"invalid code type. invalid value: ${invalid}"
+      )
 }
