@@ -1,5 +1,5 @@
 organization in ThisBuild := "me.kerfume"
-version in ThisBuild := "0.1.1"
+version in ThisBuild := "0.1.2"
 scalafmtOnCompile in ThisBuild := true
 
 lazy val tpas = Tpas.tpas

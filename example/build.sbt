@@ -1,6 +1,4 @@
 import Dependencies._
-import complete.DefaultParsers._
-import me.kerfume.tpas.ClientSupport._
 
 ThisBuild / scalaVersion     := "2.12.8"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
@@ -15,17 +13,16 @@ lazy val root = (project in file("."))
     libraryDependencies += scalaTest % Test
   )
 
+import me.kerfume.tpas.dsl._
 
-lazy val applyTemplate = inputKey[Unit]("call on interactive console > applyTemplate hello")
-
-applyTemplate := Def.inputTaskDyn {
-  val args: Seq[String] = spaceDelimited("<arg>").parsed
-
-    runTpas(
-      dest = "com.example.FooImpl",
-      template = "Foo.tpl.scala",
-      valuesJson =  s"""{
-                       |  "bar": "${args.head}"
-                       |}""".stripMargin
-    )
-}.evaluated
+defTpasTask("tpasTest").setParser { arg =>
+  val json =
+    s"""{
+       |  "bar": "${arg}"
+       |}""".stripMargin
+  minimum(
+    dest = "com.example.FooImpl",
+    template = "Foo.tpl.scala",
+    valuesJson = json
+  )
+}.build

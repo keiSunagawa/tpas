@@ -5,7 +5,6 @@ import Dependencies._
 
 object Tpas {
   lazy val tpas = (project in file("tpas"))
-    .enablePlugins(SbtPlugin)
     .settings(
       name := "tpas",
       sbtPlugin     := true,
