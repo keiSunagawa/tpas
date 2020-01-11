@@ -28,7 +28,9 @@ defTpasTask("tpasTest").setParser { arg =>
 }.build
 
 InputKey[Unit]("t") := {
+  import me.kerfume.tpas.Parser._
   import sbt.complete.DefaultParsers._
-  val a = (Space ~ any.*).parsed
+
+  val a = (Space ~> keyValues).parsed
   println(a)
 }
