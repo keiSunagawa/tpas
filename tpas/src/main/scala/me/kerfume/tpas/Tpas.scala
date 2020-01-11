@@ -3,6 +3,7 @@ package me.kerfume.tpas
 import sbt._
 import Keys._
 import me.kerfume.tpas.internal.{Settings, Main}
+import Parser._
 
 object Tpas extends AutoPlugin {
   import complete.DefaultParsers._
@@ -27,7 +28,7 @@ object Tpas extends AutoPlugin {
       (tpasDefaultCodeType in ThisBuild) := "scala",
       (tpasTemplateDir in ThisBuild) := "templates",
       tpas := {
-        val args: Seq[String] = spaceDelimited("<arg>").parsed
+        val args: Map[String, String] = keyValues.fromInputKey.parsed.toMap
         val s = state.value
         val sts = Settings(
           defaultProjectName = (tpasDefaultProject in ThisBuild).value,

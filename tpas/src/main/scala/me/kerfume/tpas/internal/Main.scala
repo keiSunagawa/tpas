@@ -4,10 +4,14 @@ import cats.effect.IO
 import me.kerfume.tpas.internal.ArgsParser.Args
 
 object Main {
-  def run(args: Seq[String], state: sbt.State, settings: Settings): IO[Unit] =
+  def run(
+      args: Map[String, String],
+      state: sbt.State,
+      settings: Settings
+  ): IO[Unit] =
     IO.suspend {
       for {
-        parsedArgs <- IO.fromEither { ArgsParser.parse(args.toList, settings) }
+        parsedArgs <- IO.fromEither { ArgsParser.parse(args, settings) }
         baseDir <- SbtModule.getProjectDir(parsedArgs.projectName, state)
         template <- FileModule.getTemplate(parsedArgs.templateName, settings)
         mergedJson = additionalEnvValues(parsedArgs)

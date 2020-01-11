@@ -25,12 +25,4 @@ defTpasTask("tpasTest").setParser { arg =>
     template = "Foo.tpl.scala",
     valuesJson = json
   )
-}.build
-
-InputKey[Unit]("t") := {
-  import me.kerfume.tpas.Parser._
-  import sbt.complete.DefaultParsers._
-
-  val a = (Space ~> keyValues).parsed
-  println(a)
-}
+}.setScope("test").build

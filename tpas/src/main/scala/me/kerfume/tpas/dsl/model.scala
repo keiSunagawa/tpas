@@ -7,7 +7,8 @@ import sbt.internal.util.complete.{Parser => SParser}
 case class DefTask[S <: State](
     private val taskName: String,
     private val paramsGen: S#ParamGen,
-    private val settings: Seq[sbt.Def.Setting[_]]
+    private val settings: Seq[sbt.Def.Setting[_]],
+    private val updateParams: Params => Params = identity
 ) {
   def setParser(
       parser: String => Params
@@ -30,11 +31,48 @@ case class DefTask[S <: State](
     copy[S](settings = ss)
   }
 
+  def setProject(
+      projectName: String
+  ): DefTask[S] = {
+    copy[S](
+      updateParams = updateParams.compose(
+        _.copy(
+          project = Some(projectName)
+        )
+      )
+    )
+  }
+
+  def setScope(
+      scopeName: String
+  ): DefTask[S] = {
+    copy[S](
+      updateParams = updateParams.compose(
+        _.copy(
+          scope = Some(scopeName)
+        )
+      )
+    )
+  }
+
+  def setCodeType(
+      codeType: String
+  ): DefTask[S] = {
+    copy[S](
+      updateParams = updateParams.compose(
+        _.copy(
+          codeType = Some(codeType)
+        )
+      )
+    )
+  }
+
   def buildForTask(
       implicit ev: S =:= WithConst,
       ev2: S#ParamGen =:= Params
   ): sbt.Def.Setting[sbt.Task[Unit]] = {
-    Builder.buildTask(taskName, ev2(paramsGen))(settings)
+    val completeParams = updateParams(ev2(paramsGen))
+    Builder.buildTask(taskName, completeParams)(settings)
   }
 
   def buildForInputTaskWithFParser(
@@ -42,14 +80,14 @@ case class DefTask[S <: State](
       ev2: =:=[S#ParamGen, String => Params]
   ): sbt.Def.Setting[sbt.InputTask[Unit]] = {
     val parser = Parser.all.map(ev2(paramsGen))
-    Builder.buildInputTask(taskName, parser)(settings)
+    Builder.buildInputTask(taskName, parser, updateParams)(settings)
   }
   def buildForInputTaskWithSParser(
       implicit ev: S =:= WithParser,
       ev2: =:=[S#ParamGen, SParser[Params]]
   ): sbt.Def.Setting[sbt.InputTask[Unit]] = {
     val parser = sbt.complete.DefaultParsers.Space ~> (ev2(paramsGen))
-    Builder.buildInputTask(taskName, parser)(settings)
+    Builder.buildInputTask(taskName, parser, updateParams)(settings)
   }
 }
 

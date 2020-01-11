@@ -1,30 +1,24 @@
 package me.kerfume.tpas.internal
 
-import cats.syntax.traverse._
-import cats.instances.list._
-import cats.instances.either._
 import io.circe._
 import JsonUtil._
 
 object ArgsParser {
-  def parse(args: List[String], settings: Settings): Either[ParsError, Args] = {
+  def parse(
+      args: Map[String, String],
+      settings: Settings
+  ): Either[ParsError, Args] = {
     for {
-      parsedArgs <- args
-        .traverse { a =>
-          val kv = a.split("=").filter(_.nonEmpty)
-          Either.cond(kv.size == 2, kv(0) -> kv(1), InvalidArgFormat(a))
-        }
-        .map(_.toMap)
-      projectName = parsedArgs.getOrElse("prj", settings.defaultProjectName)
-      scope = parsedArgs.getOrElse("scp", settings.defaultScopeName)
-      codeType = parsedArgs.getOrElse("ctp", settings.defaultCodeType)
-      dest <- parsedArgs.get("dst").toRight(DestRequire())
-      templateName <- parsedArgs.get("tmp").toRight(TemplateRequire())
-      valuesJson <- parsedArgs.get("val") match {
+      dest <- args.get("dst").toRight(DestRequire())
+      templateName <- args.get("tmp").toRight(TemplateRequire())
+      valuesJson <- args.get("val") match {
         case None => Right(emptyJson)
         case Some(jsonStr) =>
           parser.parse(jsonStr).left.map { ValuesJsonParseError }
       }
+      projectName = args.getOrElse("prj", settings.defaultProjectName)
+      scope = args.getOrElse("scp", settings.defaultScopeName)
+      codeType = args.getOrElse("ctp", settings.defaultCodeType)
     } yield {
       Args(
         projectName = projectName,
