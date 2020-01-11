@@ -26,3 +26,9 @@ defTpasTask("tpasTest").setParser { arg =>
     valuesJson = json
   )
 }.build
+
+InputKey[Unit]("t") := {
+  import sbt.complete.DefaultParsers._
+  val a = (Space ~ any.*).parsed
+  println(a)
+}

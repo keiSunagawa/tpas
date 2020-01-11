@@ -30,11 +30,12 @@ package object dsl {
     codeType = Some(codeType)
   )
 
-  implicit class BuilderWithParam(t: DefTask[DefTask.WithParams]) {
+  implicit class BuilderWithParam(t: DefTask[DefTask.WithConst]) {
     def build: sbt.Def.Setting[sbt.Task[Unit]] = t.buildForTask
   }
-  implicit class BuilderWithParser(t: DefTask[DefTask.WithParser]) {
-    def build: sbt.Def.Setting[sbt.InputTask[Unit]] = t.buildForInputTask
+  implicit class BuilderWithParser(t: DefTask[DefTask.WithFunctionParser]) {
+    def build: sbt.Def.Setting[sbt.InputTask[Unit]] =
+      t.buildForInputTaskWithFParser
   }
 
   def defTpasTask(taskName: String): DefTask[DefTask.Init] = DefTask(taskName)

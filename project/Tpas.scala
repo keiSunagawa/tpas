@@ -1,6 +1,5 @@
 import sbt._
 import Keys._
-import sbt.plugins.SbtPlugin
 import Dependencies._
 
 object Tpas {
