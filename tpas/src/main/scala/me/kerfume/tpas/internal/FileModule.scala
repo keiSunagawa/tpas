@@ -33,18 +33,25 @@ object FileModule {
         case _: CodeType.ScalaCode => "scala"
         case CodeType.Java         => "java"
       }
-      _ <- IO {
+      fullPath = Paths.get(s"${dir}/${dest.itemName}.${ext}")
+      ifExists <- IO { Files.exists(fullPath) }
+      _ <- if (!ifExists) IO {
         sIO.write(
-          new File(s"${dir}/${dest.itemName}.${ext}"),
+          fullPath.toFile,
           content,
           sIO.utf8
         )
-      }
+      } else IO.raiseError(FileAlreadyExists(fullPath))
     } yield ()
   }
 
   case class TemplateNotFound(templatetName: String)
       extends RuntimeException(
         s"template not found. name: ${templatetName}"
+      )
+
+  case class FileAlreadyExists(filePath: Path)
+      extends RuntimeException(
+        s"dest file already exists. path: ${filePath}"
       )
 }

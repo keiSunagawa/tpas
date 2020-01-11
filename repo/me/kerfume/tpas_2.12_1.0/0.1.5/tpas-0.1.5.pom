@@ -5,7 +5,7 @@
     <artifactId>tpas</artifactId>
     <packaging>jar</packaging>
     <description>tpas</description>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
     <name>tpas</name>
     <organization>
         <name>me.kerfume</name>
