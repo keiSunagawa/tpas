@@ -1,10 +1,15 @@
 import me.kerfume.tpas.dsl._
+import me.kerfume.tpas.Tpas.autoImport._
 import sbt._
 import sbt.complete.DefaultParsers._
 import me.kerfume.tpas.Parser._
 
 object Template {
-  lazy val genTasks = sbt.Def.settings(
+  lazy val domainGenSettings = Def.settings(
+    ThisBuild / tpasDefaultProject := "domain"
+  )
+
+  lazy val genTasks = Def.settings(
     /** > genSimple hoge */
     defTpasTask("genSimple").setParser { arg =>
       val json =
@@ -18,7 +23,7 @@ object Template {
       )
     }.build,
     /** > genDomainModel group="authentication.user" name=User keyType=Long */
-    defTpasTask("genDomainModel").setParser {
+    defTpasTask("genDomainModel").setSettings(domainGenSettings).setParser {
       keyValues.flatMap {
         ps =>
           val psMap = ps.toMap
@@ -48,7 +53,7 @@ object Template {
       }
     }.build,
     /** > genRepository group="authentication.user" domainName=User */
-    defTpasTask("genRepository").setParser {
+    defTpasTask("genRepository").setSettings(domainGenSettings).setParser {
       keyValues.flatMap {
         ps =>
           val psMap = ps.toMap

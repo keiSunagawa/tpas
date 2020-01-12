@@ -13,5 +13,11 @@ lazy val root = (project in file("."))
     libraryDependencies += scalaTest % Test
   )
 
+lazy val domain = (project in file("./domain"))
+  .settings(
+    name := "example",
+    libraryDependencies += scalaTest % Test
+  )
+
 enablePlugins(me.kerfume.tpas.Tpas)
 Template.genTasks
