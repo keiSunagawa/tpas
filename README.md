@@ -12,7 +12,7 @@ sbt.version=1.3.6
 - project/plugins.sbt  
 ```sbt
 resolvers += "tpas repo" at "https://keisunagawa.github.io/tpas/repo/"
-addSbtPlugin("me.kerfume" % "tpas" % "0.1.7")
+addSbtPlugin("me.kerfume" % "tpas" % "0.2.0")
 ```
 
 - templates/Hello.tpl.scala (or your scala code template.)  

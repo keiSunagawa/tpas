@@ -11,7 +11,7 @@ object ArgsParser {
   ): Either[ParsError, Args] = {
     for {
       dest <- args.get("dst").toRight(DestRequire())
-      templateName <- args.get("tmp").toRight(TemplateRequire())
+      templateName <- args.get("tpl").toRight(TemplateRequire())
       valuesJson <- args.get("val") match {
         case None => Right(emptyJson)
         case Some(jsonStr) =>

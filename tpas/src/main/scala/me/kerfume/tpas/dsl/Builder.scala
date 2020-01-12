@@ -11,7 +11,7 @@ object Builder {
     def inVDQuotes(str: String): String = "\"\"\"" ++ str ++ "\"\"\""
 
     val dstS = s"dst=${inDQuotes(params.dest)}"
-    val tmpS = s"tmp=${inDQuotes(params.template)}"
+    val tmpS = s"tpl=${inDQuotes(params.template)}"
     val valS = s"val=${inVDQuotes(params.valuesJson)}"
 
     val optionalArgs = List(
