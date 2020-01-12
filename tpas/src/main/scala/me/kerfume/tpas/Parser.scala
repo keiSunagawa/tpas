@@ -21,7 +21,9 @@ object Parser {
 
   /** e.g. pureKey=pureValue json="{ \"x\": \"y\"} }" ... */
   val keyValues: SParser[Seq[(String, String)]] =
-    ((keyValue <~ Space.+).* ~ keyValue).map { case (hs, t) => hs :+ t }
+    ((keyValue <~ Space.+).* ~ (keyValue <~ Space.*)).map {
+      case (hs, t) => hs :+ t
+    }
 
   implicit class EnrichSParser[X](val underlying: SParser[X]) extends AnyVal {
     def fromInputKey: SParser[X] = Space ~> underlying

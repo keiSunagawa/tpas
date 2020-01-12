@@ -9,6 +9,6 @@ object Tpas {
       sbtPlugin     := true,
       scalacOptions ++= Base.commonScalaOptions,
       publishTo := Some(Resolver.file("tpas", file("repo"))),
-      libraryDependencies ++= Base.commonLibs ++ mustache ++ circe ++ catsEffect
+      libraryDependencies ++= Base.commonLibs ++ mustache ++ circe ++ catsEffect,
     )
 }

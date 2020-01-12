@@ -2,6 +2,7 @@ package me.kerfume.tpas.internal
 
 import cats.effect.IO
 import me.kerfume.tpas.internal.ArgsParser.Args
+import me.kerfume.tpas.internal.`enum`.CodeType
 
 object Main {
   def run(
@@ -17,7 +18,7 @@ object Main {
         mergedJson = additionalCtxValues(parsedArgs)
         applied <- MustacheModule.applyTemplate(template, mergedJson)
         dest = parsedArgs.dest
-        content = contentComplete(applied, dest)
+        content = contentComplete(applied, dest, parsedArgs.codeType)
         _ <- FileModule.createFile(
           baseDir = baseDir.toPath,
           scope = parsedArgs.scope,
@@ -28,8 +29,16 @@ object Main {
       } yield ()
     }
 
-  private def contentComplete(content: String, dest: Dest): String = {
-    s"""package ${dest.packagePath.mkString(".")}
+  private def contentComplete(
+      content: String,
+      dest: Dest,
+      codeType: CodeType
+  ): String = {
+    val delimiter = codeType match {
+      case CodeType.Java => ";"
+      case _             => ""
+    }
+    s"""package ${dest.packagePath.mkString(".")}${delimiter}
        |
        |${content}
        |""".stripMargin

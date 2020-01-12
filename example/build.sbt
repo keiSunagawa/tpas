@@ -1,11 +1,11 @@
 import Dependencies._
 
-ThisBuild / scalaVersion     := "2.12.8"
-ThisBuild / version          := "0.1.0-SNAPSHOT"
-ThisBuild / organization     := "com.example"
+ThisBuild / scalaVersion := "2.12.8"
+ThisBuild / version := "0.1.0-SNAPSHOT"
+ThisBuild / organization := "com.example"
 ThisBuild / organizationName := "example"
 
-enablePlugins(Tpas)
+ThisBuild / scalafmtOnCompile := true
 
 lazy val root = (project in file("."))
   .settings(
@@ -13,16 +13,5 @@ lazy val root = (project in file("."))
     libraryDependencies += scalaTest % Test
   )
 
-import me.kerfume.tpas.dsl._
-
-defTpasTask("tpasTest").setParser { arg =>
-  val json =
-    s"""{
-       |  "bar": "${arg}"
-       |}""".stripMargin
-  minimum(
-    dest = "com.example.FooImpl",
-    template = "Foo.tpl.scala",
-    valuesJson = json
-  )
-}.build
+enablePlugins(me.kerfume.tpas.Tpas)
+Template.genTasks

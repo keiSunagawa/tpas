@@ -28,6 +28,7 @@ object Tpas extends AutoPlugin {
       (tpasDefaultCodeType in ThisBuild) := CodeType.Scala,
       (tpasTemplateDir in ThisBuild) := "templates",
       tpas := {
+        val logger = streams.value.log
         val args: Map[String, String] = keyValues.fromInputKey.parsed.toMap
         val s = state.value
         val sts = Settings(
@@ -41,7 +42,7 @@ object Tpas extends AutoPlugin {
           .run(args, s, sts)
           .handleErrorWith { e =>
             cats.effect.IO {
-              e.printStackTrace()
+              logger.err(e.getMessage)
             }
           }
           .unsafeRunSync()
