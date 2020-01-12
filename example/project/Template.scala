@@ -1,5 +1,4 @@
 import me.kerfume.tpas.dsl._
-import me.kerfume.tpas.Parser
 import sbt._
 import sbt.complete.DefaultParsers._
 import me.kerfume.tpas.Parser._
