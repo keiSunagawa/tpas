@@ -38,7 +38,6 @@ val json =
     valuesJson = json
   )
 }.build
-
 ```
 
 ### run define your template gen task  
@@ -53,3 +52,6 @@ class Hello {
 ```
 
 other example see [example](./example)
+
+## Detail  
+see [wiki](https://github.com/keiSunagawa/tpas/wiki)
